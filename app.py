@@ -55,6 +55,14 @@ def main():
     st.set_page_config(page_title="Quiz APP", page_icon="❓")
     st.markdown("<p style='{}'>➡️created by 'Muhammad Zain Attiq'</p>".format(created_style), unsafe_allow_html=True)
     st.markdown(f"<h1 style='{header_style}'>Dynamic Quiz App</h1>", unsafe_allow_html=True)
+    with st.expander("About the app:"):
+        st.markdown('**What can this app do?**')
+        st.info('This app is designed for students to validate their knowledge about specific topics. It can generate a number of Multiple Choice Questions for you on your desired topic.')
+        st.markdown('**How to use the app?**')
+        st.warning('''To engage with the app,
+                    1. Enter the topic of your interest in the input text box and then
+                    2. Enter the number of questions you want to have.
+                    3. Select the difficulty level you want to have in the questions''')
     # Check if response is already stored in session state
     if 'response' not in st.session_state:
         st.session_state.response = None
