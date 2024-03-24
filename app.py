@@ -21,7 +21,7 @@ header_style = """
 
 @st.cache_data(show_spinner=False)
 def generate_response(topic, number, difficulty):
-    system_content = '''You are a quiz generator. You will be given a particular topic and you will give in response some number of Mulitple Choice Questions on that topic of specific difficulty level. The difficulty level will be "easy", "medium" "difficult" or "hardest". The user will give in input the topic, the number of questions and the difficulty level. The format of user  prompt will be as follows:
+    system_content = '''You are a quiz generator. You will be given a particular topic and you will give in response some number of Mulitple Choice Questions on that topic of specific difficulty level. The difficulty level will be "easy", "medium" "difficult" or "hardest". Please keep in mind that you have a to generate only valid questions and the correct_option should be strictly correct. The user will give in input the topic, the number of questions and the difficulty level. The format of user  prompt will be as follows:
     {topic: "Artificial Intellisense" , number : 10, difficulty = "easy" }
 
     And Your response should be in the JSON format (a list of dictionaries with each dictionary with six key-value pairs: the question, option1, option2, option3, option4 and correct_option as follows:
@@ -48,7 +48,7 @@ def generate_response(topic, number, difficulty):
         {'role': 'system', 'content': system_content},
         {'role': 'user', 'content': user_content}
     ]
-    response = openai.chat.completions.create(model='gpt-3.5-turbo-0125', messages=messages)
+    response = openai.chat.completions.create(model='gpt-3.5-turbo-0125', messages=messages, temperature=0.9)
     return response
 
 def main():
@@ -57,7 +57,7 @@ def main():
     st.markdown(f"<h1 style='{header_style}'>Dynamic Quiz App</h1>", unsafe_allow_html=True)
     with st.expander("About the app:"):
         st.markdown('**What can this app do?**')
-        st.info('This app is designed for students to validate their knowledge about specific topics. It can generate a number of Multiple Choice Questions for you on your desired topic.')
+        st.info('This app is designed for students to validate their knowledge on any topic. It can generate a number of Multiple Choice Questions for you on your desired topic.')
         st.markdown('**How to use the app?**')
         st.warning('''To engage with the app,
                     1. Enter the topic of your interest in the input text box and then
@@ -68,8 +68,9 @@ def main():
         st.session_state.response = None
 
     topic = st.text_input("Enter the topic of the questions: ")
-    number = st.number_input("Enter the number of questions you want: (Max 10)", 1, 10)
-    difficulty = st.selectbox("Select the difficulty level: ", ["Easy", "Medium", "Difficult", "Hardest"])
+    with st.sidebar:
+        number = st.number_input("Enter the number of questions you want: (Max 10)", 1, 10)
+        difficulty = st.selectbox("Select the difficulty level: ", ["Easy", "Medium", "Difficult", "Hardest"])
     # number = st.slider("Number of MCQs",1,20,2)
 
     if st.button("Generate"):
@@ -89,6 +90,7 @@ def main():
             options = [question[option] for option in ['option1', 'option2', 'option3', 'option4']]
             st.write(question['question'])
             selected = st.radio("Choose one of them:", ["Select from below:"] + options, key=f'{i}')
+            is_selected =  selected in options
             if selected == question['correct_option']:
                 marks += 1
                 result = "Correct!"
@@ -96,7 +98,7 @@ def main():
                 result = "Select an option"
             else:
                 result = "Wrong!"
-            with st.expander(f"Check Question {i}"):
+            with st.expander(f"Check Question {i}", expanded = is_selected):
                 if result == "Correct!":
                     st.success(result)
                 if result == "Select an option":
