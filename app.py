@@ -54,7 +54,7 @@ def generate_response(topic, number, difficulty):
 def main():
     st.set_page_config(page_title="Quiz APP", page_icon="❓")
     st.markdown("<p style='{}'>➡️created by 'Muhammad Zain Attiq'</p>".format(created_style), unsafe_allow_html=True)
-    st.markdown(f"<h1 style='{header_style}'>Dynamic Quiz App</h1>", unsafe_allow_html=True)
+    st.markdown(f"<h1 style='{header_style}'>AI Powered Dynamic Quiz App</h1>", unsafe_allow_html=True)
     with st.expander("About the app:"):
         st.markdown('**What can this app do?**')
         st.info('This app is designed for students to validate their knowledge on any topic. It can generate a number of Multiple Choice Questions for you on your desired topic.')
