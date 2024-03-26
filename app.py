@@ -86,9 +86,10 @@ def main():
     if st.session_state.response:
         marks = 0
         for i, question in enumerate(st.session_state.response, start=1):
+            st.write("________________________________________________________________")
             result = ""
             options = [question[option] for option in ['option1', 'option2', 'option3', 'option4']]
-            st.write(question['question'])
+            st.write(i, question['question'])
             selected = st.radio("Choose one of them:", ["Select from below:"] + options, key=f'{i}')
             is_selected =  selected in options
             if selected == question['correct_option']:
